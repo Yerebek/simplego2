@@ -158,7 +158,11 @@ export function HomeScreen({
     (d) => d.category === 'concession' && matchesAvailability(d)
   );
 
-  const renderDesignCard = (item: CardCharmDesign, accentClass: string) => {
+  const renderDesignCard = (
+    item: CardCharmDesign,
+    accentClass: string,
+    compactCard = false
+  ) => {
     const itemAlertCount = restockAlerts.filter(
       (a) => a.designId === item.id
     ).length;
@@ -168,17 +172,23 @@ export function HomeScreen({
         key={item.id}
         type="button"
         onClick={() => setSelectedDesign(item)}
-        className="group text-left bg-white border border-slate-200 hover:border-[#3f84c5] rounded-2xl p-4 transition-all hover:shadow-md flex flex-col justify-between cursor-pointer"
+        className={`group text-left bg-white border border-slate-200 hover:border-[#3f84c5] rounded-2xl transition-all hover:shadow-md flex flex-col justify-between cursor-pointer ${
+          compactCard ? 'p-3.5' : 'p-4'
+        }`}
       >
         <div>
           <div
-            className={`relative h-36 rounded-xl flex items-center justify-center p-3 overflow-hidden mb-3.5 ${accentClass}`}
+            className={`relative rounded-xl flex items-center justify-center p-2.5 overflow-hidden ${
+              compactCard ? 'h-24 mb-2.5' : 'h-28 mb-3'
+            } ${accentClass}`}
           >
             <ResilientImage
               src={item.image}
               alt={item.name}
               fallbackLabel={item.name}
-              className="max-h-28 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              className={`${
+                compactCard ? 'max-h-20' : 'max-h-24'
+              } w-auto object-contain transition-transform duration-200 group-hover:scale-105`}
             />
             {item.videoUrl && (
               <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 bg-[#0c1a27]/85 text-white text-[11px] font-semibold px-2 py-1 rounded-md">
@@ -187,13 +197,13 @@ export function HomeScreen({
               </span>
             )}
           </div>
-          <h4 className="text-sm font-bold text-[#142333] group-hover:text-[#316aa1] transition-colors line-clamp-2">
+          <h4 className="text-sm font-bold text-[#142333] group-hover:text-[#316aa1] transition-colors line-clamp-2 leading-snug">
             {item.name}
           </h4>
         </div>
 
-        <div className="mt-3 pt-3 border-t border-slate-100 space-y-2 text-xs">
-          <div className="flex items-center justify-between gap-2">
+        <div className="mt-2.5 pt-2.5 border-t border-slate-100 space-y-1.5 text-xs">
+          <div className="flex items-center justify-between gap-1.5">
             <AvailabilityStatusIndicator
               status={item.availabilityStatus}
               label={item.availabilityLabel}
@@ -207,13 +217,13 @@ export function HomeScreen({
             )}
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="font-semibold text-[#142333] tabular-nums truncate pr-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-semibold text-[#142333] tabular-nums truncate">
               {item.priceOrFee}
             </span>
-            <span className="font-semibold text-[#316aa1] shrink-0 inline-flex items-center gap-1">
+            <span className="font-semibold text-[#316aa1] shrink-0 inline-flex items-center gap-0.5">
               Details
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </span>
           </div>
         </div>
@@ -243,9 +253,9 @@ export function HomeScreen({
       )}
 
       {/* 1. Compact Split Hero: Quick Search + Compact Announcement Banner */}
-      <section className="bg-gradient-to-b from-[#ebf2f9] to-white border-b border-slate-200/80 py-7 lg:py-8">
+      <section className="bg-gradient-to-b from-[#ebf2f9] to-white border-b border-slate-200/80 py-5 lg:py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div className="lg:col-span-6 space-y-3.5">
               <div>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#142333]">
@@ -472,7 +482,7 @@ export function HomeScreen({
       {/* 1.5 Quiet Commuter Profile Selector */}
       <section
         aria-label="Choose your commuter profile"
-        className="bg-white border-b border-slate-200/80 py-4"
+        className="bg-white border-b border-slate-200/80 py-3"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -545,8 +555,8 @@ export function HomeScreen({
       </section>
 
       {/* 2. Minimalist Cards & Charms Catalog (Key Info Upfront, Click for Stock & Details) */}
-      <section id="latest-cards-charms" className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <section id="latest-cards-charms" className="py-8 lg:py-9 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#142333]">
@@ -695,10 +705,10 @@ export function HomeScreen({
           </div>
 
           {/* Minimalist Product Grids */}
-          <div className="space-y-9">
+          <div className="space-y-6">
             {(designFilter === 'all' || designFilter === 'ezlink') &&
               ezlinkDesigns.length > 0 && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-bold text-[#142333]">
                       EZ-Link Cards
@@ -711,7 +721,7 @@ export function HomeScreen({
                       Compare plans →
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {ezlinkDesigns.map((item) =>
                       renderDesignCard(item, 'bg-[#ebf2f9]/70')
                     )}
@@ -721,7 +731,7 @@ export function HomeScreen({
 
             {(designFilter === 'all' || designFilter === 'charm') &&
               charmDesigns.length > 0 && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-bold text-[#142333]">
                       EZ-Link Charms
@@ -734,7 +744,7 @@ export function HomeScreen({
                       Check by outlet →
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {charmDesigns.map((item) =>
                       renderDesignCard(item, 'bg-amber-50/80')
                     )}
@@ -744,7 +754,7 @@ export function HomeScreen({
 
             {(designFilter === 'all' || designFilter === 'concession') &&
               concessionDesigns.length > 0 && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-bold text-[#142333]">
                       Concession & Monthly Travel Cards
@@ -759,9 +769,9 @@ export function HomeScreen({
                       Check eligibility & estimator →
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     {concessionDesigns.map((item) =>
-                      renderDesignCard(item, 'bg-emerald-50/75')
+                      renderDesignCard(item, 'bg-emerald-50/75', true)
                     )}
                   </div>
                 </div>
@@ -798,7 +808,7 @@ export function HomeScreen({
       {/* 3. Summarised SimplyGo App Section (Compact Features + Direct Download) */}
       <section
         id="simplygo-app-hub"
-        className="py-10 lg:py-12 bg-[#ebf2f9] border-y border-slate-200/70"
+        className="py-8 lg:py-9 bg-[#ebf2f9] border-y border-slate-200/70"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
@@ -917,9 +927,9 @@ export function HomeScreen({
       </section>
 
       {/* 4. Minimal Assistance Hub */}
-      <section className="py-12 bg-white">
+      <section className="py-8 lg:py-9 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-7">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-[#142333]">
                 Looking For Assistance?

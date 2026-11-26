@@ -175,8 +175,8 @@ export function TravelCardsView({
       : 'nav-cards';
 
   return (
-    <section className="py-10 lg:py-14 bg-white min-h-[calc(100vh-8rem)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section className="py-7 lg:py-10 bg-white min-h-[calc(100vh-8rem)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <BreadcrumbBar
           currentLabel={`Cards & Charms · ${activeTabInfo.label}`}
           onGoHome={() => onNavigate('home')}
@@ -185,19 +185,19 @@ export function TravelCardsView({
           onTogglePin={() => onTogglePin(pinId)}
         />
         {/* Intro + 4 Clear Category Tabs */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#ebf2f9] rounded-2xl p-6 sm:p-10">
-          <div className="lg:col-span-8 space-y-4">
-            <p className="text-sm font-semibold text-[#3f84c5]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-[#ebf2f9] rounded-2xl p-5 sm:p-7">
+          <div className="lg:col-span-8 space-y-3">
+            <p className="text-xs font-semibold text-[#3f84c5]">
               Clear Transit & Motoring Guide
             </p>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#142333]">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#142333]">
               {activeTabInfo.label}
             </h1>
-            <p className="text-base text-slate-600 max-w-2xl">
+            <p className="text-sm sm:text-base text-slate-600 max-w-2xl">
               {activeTabInfo.summary}
             </p>
 
-            <div className="flex flex-wrap items-center gap-2 pt-2">
+            <div className="flex flex-wrap items-center gap-2 pt-1">
               {TABS.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
@@ -205,7 +205,7 @@ export function TravelCardsView({
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                    className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                       isActive
                         ? 'bg-[#316aa1] text-white'
                         : 'bg-white text-slate-700 hover:text-[#316aa1] border border-slate-200'
@@ -222,7 +222,7 @@ export function TravelCardsView({
             <ResilientImage
               src={activeTabInfo.image}
               alt={activeTabInfo.label}
-              className="max-h-44 w-auto object-contain rounded-xl"
+              className="max-h-32 w-auto object-contain rounded-xl"
             />
           </div>
         </div>
@@ -353,7 +353,13 @@ export function TravelCardsView({
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div
+                className={
+                  activeTab === 'concession'
+                    ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'
+                    : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
+                }
+              >
                 {filteredDesigns.map((design) => {
                   const matchedChannel = findMatchedChannel(design);
                   const alternativeChannel = design.channels.find(
@@ -367,17 +373,22 @@ export function TravelCardsView({
                         (a) => a.channel === matchedChannel.channel
                       )
                     : false;
+                  const isCompactRow = activeTab === 'concession';
 
                   return (
                     <div
                       key={design.id}
-                      className="border border-slate-200 rounded-2xl p-5 bg-white flex flex-col justify-between hover:border-[#316aa1]/50 transition-colors"
+                      className={`border border-slate-200 rounded-2xl bg-white flex flex-col justify-between hover:border-[#316aa1]/50 transition-colors ${
+                        isCompactRow ? 'p-4' : 'p-5'
+                      }`}
                     >
                       <div>
                         <button
                           type="button"
                           onClick={() => setSelectedDesign(design)}
-                          className="w-full h-44 rounded-xl bg-[#ebf2f9]/55 flex items-center justify-center p-3 mb-4 overflow-hidden cursor-pointer"
+                          className={`w-full rounded-xl bg-[#ebf2f9]/55 flex items-center justify-center p-2.5 overflow-hidden cursor-pointer ${
+                            isCompactRow ? 'h-28 mb-3' : 'h-36 mb-3.5'
+                          }`}
                           aria-label={`View details and outlet stock for ${design.name}`}
                         >
                           {design.videoUrl ? (
@@ -388,14 +399,16 @@ export function TravelCardsView({
                               muted
                               loop
                               playsInline
-                              className="max-h-40 rounded-lg w-auto object-contain"
+                              className="max-h-32 rounded-lg w-auto object-contain"
                             />
                           ) : (
                             <ResilientImage
                               src={design.image}
                               alt={design.name}
                               fallbackLabel={design.name}
-                              className="max-h-36 w-auto object-contain"
+                              className={`${
+                                isCompactRow ? 'max-h-24' : 'max-h-32'
+                              } w-auto object-contain`}
                             />
                           )}
                         </button>
@@ -405,16 +418,20 @@ export function TravelCardsView({
                           onClick={() => setSelectedDesign(design)}
                           className="text-left cursor-pointer group"
                         >
-                          <h3 className="text-lg font-bold text-[#142333] group-hover:text-[#316aa1] transition-colors">
+                          <h3
+                            className={`font-bold text-[#142333] group-hover:text-[#316aa1] transition-colors leading-snug ${
+                              isCompactRow ? 'text-sm' : 'text-lg'
+                            }`}
+                          >
                             {design.name}
                           </h3>
                         </button>
                       </div>
 
-                      <div className="mt-4 pt-3.5 border-t border-slate-100 space-y-3 text-xs">
+                      <div className="mt-3 pt-3 border-t border-slate-100 space-y-2.5 text-xs">
                         {/* Key Availability Status */}
                         <div className="space-y-1">
-                          <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center justify-between gap-1.5">
                             <AvailabilityStatusIndicator
                               status={
                                 matchedChannel
@@ -434,7 +451,7 @@ export function TravelCardsView({
                                   className="w-3 h-3"
                                   aria-hidden="true"
                                 />
-                                <span>{designAlerts.length} alert</span>
+                                <span>{designAlerts.length}</span>
                               </span>
                             )}
                           </div>
@@ -449,12 +466,12 @@ export function TravelCardsView({
                           )}
                         </div>
 
-                        <div className="flex items-center justify-between gap-2 pt-1">
-                          <span className="font-bold text-[#316aa1] tabular-nums">
+                        <div className="flex items-center justify-between gap-2 pt-0.5">
+                          <span className="font-bold text-[#316aa1] tabular-nums truncate">
                             {design.priceOrFee}
                           </span>
 
-                          <div className="flex items-center gap-2 shrink-0">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             {matchedChannel &&
                               (matchedChannel.status === 'out-of-stock' ||
                                 matchedChannel.status === 'low-stock') && (
@@ -467,7 +484,7 @@ export function TravelCardsView({
                                       'commuter@example.com'
                                     )
                                   }
-                                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+                                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
                                     matchedAlertActive
                                       ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
                                       : 'bg-white border-slate-300 text-[#316aa1] hover:border-[#316aa1]'
@@ -495,10 +512,10 @@ export function TravelCardsView({
                             <button
                               type="button"
                               onClick={() => setSelectedDesign(design)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#ebf2f9] hover:bg-[#dce8f5] text-[#316aa1] text-xs font-semibold rounded-lg transition-colors whitespace-nowrap cursor-pointer"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-[#ebf2f9] hover:bg-[#dce8f5] text-[#316aa1] text-xs font-semibold rounded-lg transition-colors whitespace-nowrap cursor-pointer"
                             >
-                              <span>Details & Stock</span>
-                              <ArrowRight className="w-3.5 h-3.5" />
+                              <span>{isCompactRow ? 'Details' : 'Details & Stock'}</span>
+                              <ArrowRight className="w-3 h-3" />
                             </button>
                           </div>
                         </div>
@@ -513,19 +530,32 @@ export function TravelCardsView({
 
         {/* Product Details (Key Info Upfront, Click to Expand Benefits) */}
         {filteredProducts.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            className={
+              activeTab === 'concession'
+                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'
+                : 'grid grid-cols-1 md:grid-cols-2 gap-5'
+            }
+          >
             {filteredProducts.map((product) => {
               const isExpanded = expandedProductIds.includes(product.id);
+              const isCompactRow = activeTab === 'concession';
               return (
                 <div
                   key={product.id}
-                  className="border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col justify-between bg-white"
+                  className={`border border-slate-200 rounded-2xl flex flex-col justify-between bg-white ${
+                    isCompactRow ? 'p-5' : 'p-6'
+                  }`}
                 >
                   <div>
-                    <p className="text-xs font-medium text-[#3f84c5]">
+                    <p className="text-xs font-medium text-[#3f84c5] line-clamp-1">
                       {product.eligibility}
                     </p>
-                    <h2 className="text-xl sm:text-2xl font-bold text-[#142333] mt-1">
+                    <h2
+                      className={`font-bold text-[#142333] mt-1 ${
+                        isCompactRow ? 'text-base sm:text-lg' : 'text-xl'
+                      }`}
+                    >
                       {product.name}
                     </h2>
 
@@ -533,7 +563,7 @@ export function TravelCardsView({
                       type="button"
                       onClick={() => toggleProductDetails(product.id)}
                       aria-expanded={isExpanded}
-                      className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-[#316aa1] hover:text-[#255582] cursor-pointer"
+                      className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#316aa1] hover:text-[#255582] cursor-pointer"
                     >
                       <span>
                         {isExpanded
@@ -548,17 +578,17 @@ export function TravelCardsView({
                     </button>
 
                     {isExpanded && (
-                      <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
-                        <p className="text-sm text-slate-600 leading-relaxed">
+                      <div className="mt-3 pt-3 border-t border-slate-100 space-y-2.5">
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                           {product.tagline}
                         </p>
-                        <ul className="space-y-2">
+                        <ul className="space-y-1.5">
                           {product.keyBenefits.map((benefit) => (
                             <li
                               key={benefit}
-                              className="flex items-start gap-2.5 text-sm text-slate-700"
+                              className="flex items-start gap-2 text-xs sm:text-sm text-slate-700"
                             >
-                              <Check className="w-4 h-4 text-[#316aa1] shrink-0 mt-0.5" />
+                              <Check className="w-3.5 h-3.5 text-[#316aa1] shrink-0 mt-0.5" />
                               <span>{benefit}</span>
                             </li>
                           ))}
@@ -567,22 +597,22 @@ export function TravelCardsView({
                     )}
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                  <div className="mt-4 pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <span className="text-xs text-slate-500 block">
+                      <span className="text-[11px] text-slate-500 block">
                         {product.monthlyPassPrice ? 'Monthly Pass' : 'Typical Fare'}
                       </span>
-                      <span className="text-sm font-bold text-[#316aa1] tabular-nums">
+                      <span className="text-xs sm:text-sm font-bold text-[#316aa1] tabular-nums">
                         {product.monthlyPassPrice || product.fareExample}
                       </span>
                     </div>
                     <button
                       type="button"
                       onClick={() => onNavigate('services')}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#ebf2f9] hover:bg-[#dce8f5] text-[#316aa1] text-sm font-semibold rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#ebf2f9] hover:bg-[#dce8f5] text-[#316aa1] text-xs font-semibold rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                     >
                       <span>Check Fares</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
